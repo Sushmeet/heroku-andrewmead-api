@@ -6,14 +6,16 @@ heroku create
 heroku addons:create mongolab:sandbox
 
 heroku config
-will give us the mondodb uri.
+> will give us the mondodb uri.
 
 #push code to heroku master
-git push heroku master
+> git push heroku master
 
 #heroku logging
-heroku logs
+> heroku logs
 
 #to go heroku root of app
-heroku open
+> heroku open
 
+# add heroku app
+> heroku git:remote -a evening-thicket-55605

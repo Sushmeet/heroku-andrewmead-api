@@ -32,12 +32,11 @@ describe("POST /Todos", () => {
         return request(app).get("/todos");
       })
       .then(res => {
-        // expect res.body which is arr of object to contain one object postItem.
-        expect(res.body).to.deep.include(postItem);
+        expect(res.body.todos[0]).to.deep.equal(postItem.todos);
       });
   });
 
-  it("should add an item to  then assert directly in database", () => {
+  it("should add an item and assert directly in database", () => {
     const text = "Choclates3";
 
     return request(app)
@@ -45,12 +44,12 @@ describe("POST /Todos", () => {
       .send({ text })
       .expect(200)
       .then(res => {
-        expect(res.body.text).to.equal(text);
+        expect(res.body.todos.text).to.equal(text);
         return Todo.find({text});
       })
       .then(todos => {
-        expect(todos).to.have.lengthOf(1);
-        expect(todos[0]).to.have.property("text", text);
+         expect(todos).to.have.lengthOf(1);
+         expect(todos[0]).to.have.property("text", text);
       });
   });
 

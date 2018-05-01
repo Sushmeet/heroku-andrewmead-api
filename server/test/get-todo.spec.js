@@ -15,8 +15,7 @@ describe("GET /todo", () => {
   ];
 
   beforeEach("Seed two items in the database", () => {
-    Todo.insertMany(todoVals).then(res => {
-    });
+    Todo.insertMany(todoVals).then(res => {});
   });
 
   afterEach("delete all items in database", () => {
@@ -25,12 +24,12 @@ describe("GET /todo", () => {
     });
   });
 
-  it('should return 2 items on the ', () => {
+  it("should return 2 items on the ", () => {
     return request(app)
-        .get('/todos')
-        .expect(200)
-        .then((res) => {
-        expect(res.body).to.have.lengthOf(2);
-        })
-  })
+      .get("/todos")
+      .expect(200)
+      .then(res => {
+        expect(res.body.todos).to.have.lengthOf(2);
+      });
+  });
 });

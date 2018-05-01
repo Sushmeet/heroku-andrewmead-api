@@ -11,8 +11,8 @@ const port = process.env.PORT || 4000;
 app.use(bodyParser.json());
 
 app.delete("/todos", (req, res) => {
-  Todo.remove({}).then(todo => {
-    res.send({ todo });
+  Todo.remove({}).then(todos => {
+    res.send({ todos });
   });
 });
 
@@ -40,8 +40,8 @@ app.post("/todos", (req, res) => {
   const todo = new Todo({ text: req.body.text });
 
   todo.save().then(
-    todo => {
-      res.status(200).send({ todo });
+    todos => {
+      res.status(200).send({ todos });
     },
     e => {
       res.status(400).send(e);
