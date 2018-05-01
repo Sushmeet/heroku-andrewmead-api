@@ -12,17 +12,36 @@ app.use(bodyParser.json());
 
 app.delete("/todos", (req, res) => {
   Todo.remove({}).then(todo => {
-    console.log(todo);
-    res.send({});
+    res.send({ todo });
   });
+});
+
+app.delete("/todos/:id", (req, res) => {
+  const id = req.params.id;
+
+  if (!ObjectId.isValid(id)) {
+    return res.status(404).send("Not a valid ID");
+  }
+
+  Todo.findByIdAndRemove(id)
+    .then(todo => {
+      if (!todo) {
+      return res.status(404).send({});
+      }
+
+      res.send({ todo });
+    })
+    .catch(e => {
+     return res.status(400).send(e);
+    });
 });
 
 app.post("/todos", (req, res) => {
   const todo = new Todo({ text: req.body.text });
 
   todo.save().then(
-    doc => {
-      res.status(200).send(doc);
+    todo => {
+      res.status(200).send({ todo });
     },
     e => {
       res.status(400).send(e);
@@ -42,7 +61,7 @@ app.get("/todos", (req, res) => {
   // console.log("Route", req.route);
 
   Todo.find().then(todos => {
-    res.status(200).send({todos});
+    res.status(200).send({ todos });
   });
 });
 
