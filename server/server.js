@@ -10,6 +10,13 @@ const port = process.env.PORT || 4000;
 
 app.use(bodyParser.json());
 
+app.delete("/todos", (req, res) => {
+  Todo.remove({}).then(todo => {
+    console.log(todo);
+    res.send({});
+  });
+});
+
 app.post("/todos", (req, res) => {
   const todo = new Todo({ text: req.body.text });
 
@@ -34,9 +41,8 @@ app.get("/todos", (req, res) => {
   // console.log("Body", req.body);
   // console.log("Route", req.route);
 
-
   Todo.find().then(todos => {
-    res.status(200).send(todos);
+    res.status(200).send({todos});
   });
 });
 
@@ -54,13 +60,13 @@ app.get("/todos/:id", (req, res) => {
         res.send({ todo });
       })
       .catch(e => {
-        res.status(400).send()
+        res.status(400).send();
       });
   }
 });
 
 app.get("/", (req, res) => {
-  res.send("hello09");
+  res.send("Welcome to the TODO API");
 });
 
 app.listen(port, () => {
