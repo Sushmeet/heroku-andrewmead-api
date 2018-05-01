@@ -1,9 +1,9 @@
 # mongo db start
-1. mongod --dbpath mongo-data
+``` mongod --dbpath mongo-data ```
 
 #heroku
-heroku create
-heroku addons:create mongolab:sandbox
+> heroku create
+> heroku addons:create mongolab:sandbox
 
 heroku config
 > will give us the mondodb uri.
