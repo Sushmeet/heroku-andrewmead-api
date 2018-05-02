@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 
 const { mongoose } = require("./db/mongoose");
 const { Todo } = require("./models/todo");
+const { User } = require("./models/user");
 const { ObjectId } = require("mongodb");
 
 const app = express();
@@ -11,33 +12,32 @@ const port = process.env.PORT || 4000;
 
 app.use(bodyParser.json());
 
-
-app.patch('/todos/:id', (req, res) => {
+app.patch("/todos/:id", (req, res) => {
   const id = req.params.id;
-  const body = _.pick(req.body, ['text', 'completed'])
+  const body = _.pick(req.body, ["text", "completed"]);
 
   if (!ObjectId.isValid(id)) {
     return res.status(404).send("Not a valid ID");
   }
 
-  if(_.isBoolean(body.completed) && body.completed) {
+  if (_.isBoolean(body.completed) && body.completed) {
     body.completedAt = new Date().getTime();
-  }
-  else {
+  } else {
     body.completed = false;
     body.completedAt = null;
   }
 
-  Todo.findByIdAndUpdate(id, {$set: body}, {new: true}).then((todo) => {
-    if(!todo) {
-      return res.status(404).send();
-    }
-    res.send({todo})
-  }).catch((e) => {
-    res.status(400).send(e);
-  })
-
-})
+  Todo.findByIdAndUpdate(id, { $set: body }, { new: true })
+    .then(todo => {
+      if (!todo) {
+        return res.status(404).send();
+      }
+      res.send({ todo });
+    })
+    .catch(e => {
+      res.status(400).send(e);
+    });
+});
 
 app.delete("/todos", (req, res) => {
   Todo.remove({}).then(todos => {
@@ -55,13 +55,13 @@ app.delete("/todos/:id", (req, res) => {
   Todo.findByIdAndRemove(id)
     .then(todo => {
       if (!todo) {
-      return res.status(404).send({});
+        return res.status(404).send({});
       }
 
       res.send({ todo });
     })
     .catch(e => {
-     return res.status(400).send(e);
+      return res.status(400).send(e);
     });
 });
 
@@ -115,6 +115,20 @@ app.get("/todos/:id", (req, res) => {
 
 app.get("/", (req, res) => {
   res.send("Welcome to the TODO API");
+});
+
+// POST Usersuse
+app.post("/users", (req, res) => {
+  const body = _.pick(req.body, ["email", "password"]);
+  const todo = new User({ email: body.email, password: body.password });
+
+  todo.save()
+    .then(user => {
+      res.send({ user });
+    })
+    .catch(e => {
+      res.status(400).send(e);
+    });
 });
 
 app.listen(port, () => {
