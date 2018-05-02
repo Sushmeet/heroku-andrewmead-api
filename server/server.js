@@ -117,7 +117,7 @@ app.get("/", (req, res) => {
   res.send("Welcome to the TODO API");
 });
 
-// POST Usersuse
+// POST username
 app.post("/users", (req, res) => {
   const body = _.pick(req.body, ["email", "password"]);
   const todo = new User({ email: body.email, password: body.password });
