@@ -1,16 +1,10 @@
 const mongoose = require("mongoose");
-const validator = require('validator');
+const Schema = mongoose.Schema;
+const validator = require("validator");
+const jwt = require("jsonwebtoken");
+const _ = require("lodash");
 
-// var some ={
-//     email: 'sushi@example.com',
-//     passw: '',
-//     tokens: [{
-//         access: 'auth',
-//         token: "lkj"
-//     }]
-// }
-
-const User = mongoose.model("User", {
+const userSchema = new Schema({
   email: {
     type: String,
     required: true,
@@ -18,8 +12,8 @@ const User = mongoose.model("User", {
     minlength: 1,
     unique: true,
     validate: {
-    validator: validator.isEmail,
-    message: '{VALUE} is not a valid email',
+      validator: validator.isEmail,
+      message: "{VALUE} is not a valid email"
     }
   },
   password: {
@@ -27,16 +21,47 @@ const User = mongoose.model("User", {
     require: true,
     minlength: 6
   },
-  tokens: [{
-    access: {
-      type: String,
-      required: true
-    },
-    token: {
-      type: String,
-      required: true
+  tokens: [
+    {
+      access: {
+        type: String,
+        required: true
+      },
+      token: {
+        type: String,
+        required: true
+      }
     }
-  }]
+  ]
 });
+
+
+
+
+// userSchema.methods.toJson = function() {
+//   const user = this;
+//   const userObject = user.toObject()
+
+//   return _.pick(userObject, ['_id', 'email']);
+// }
+
+userSchema.methods.generateAuthToken = function () {
+  const user = this;
+  const access = "auth";
+  const token = jwt.sign({ _id: user._id.toHexString(), access }, "secretValue").toString();
+  user.tokens.push({
+    access,
+    token
+  });
+
+  return user.save().then(() => {
+    return token;
+  })
+};
+
+
+// to use the schema definition
+// we convert our blogSchema into a Model we can work with.
+const User = mongoose.model("User", userSchema);
 
 module.exports = { User };

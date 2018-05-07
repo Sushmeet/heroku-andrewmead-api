@@ -7,6 +7,7 @@ const { Todo } = require("./models/todo");
 const { User } = require("./models/user");
 const { ObjectId } = require("mongodb");
 
+
 const app = express();
 const port = process.env.PORT || 4000;
 
@@ -120,11 +121,14 @@ app.get("/", (req, res) => {
 // POST username
 app.post("/users", (req, res) => {
   const body = _.pick(req.body, ["email", "password"]);
-  const todo = new User({ email: body.email, password: body.password });
+  const user = new User(body);
 
-  todo.save()
-    .then(user => {
-      res.send({ user });
+  user.save()
+    .then((user) => {
+       return user.generateAuthToken();
+    })
+    .then((token) => {
+       res.header('x-auth', token).send({ user });
     })
     .catch(e => {
       res.status(400).send(e);
