@@ -3,22 +3,13 @@ const { app } = require("../server");
 const { Todo } = require("../models/todo");
 const expect = require("chai").expect;
 
-describe("POST /Todos", () => {
+describe.only("POST /Todos", () => {
   const text = "Choclates3";
-  const todoVals = [
-    {
-      text: "donutes"
-    },
-    {
-      text: "gummy bears"
-    }
-  ];
 
   afterEach("Delete all entries in database", () => {
-    return Todo.remove({})
-      .then(res => {
-        expect(res.ok).to.equal(1); // Empty Database
-      })
+    return Todo.remove({}).then(res => {
+      expect(res.ok).to.equal(1); // Empty Database
+    });
   });
 
   it("should add an item to then assert with  a call to get items", () => {
@@ -37,19 +28,17 @@ describe("POST /Todos", () => {
   });
 
   it("should add an item and assert directly in database", () => {
-    const text = "Choclates3";
-
     return request(app)
       .post("/todos")
       .send({ text })
       .expect(200)
       .then(res => {
         expect(res.body.todos.text).to.equal(text);
-        return Todo.find({text});
+        return Todo.find({ text });
       })
       .then(todos => {
-         expect(todos).to.have.lengthOf(1);
-         expect(todos[0]).to.have.property("text", text);
+        expect(todos).to.have.lengthOf(1);
+        expect(todos[0]).to.have.property("text", text);
       });
   });
 
