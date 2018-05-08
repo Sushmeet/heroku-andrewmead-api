@@ -3,7 +3,7 @@ const { app } = require("../server");
 const { Todo } = require("../models/todo");
 const expect = require("chai").expect;
 
-describe.only("POST /Todos", () => {
+describe("POST /Todos", () => {
   const text = "Choclates3";
 
   afterEach("Delete all entries in database", () => {
