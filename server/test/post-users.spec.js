@@ -6,14 +6,13 @@ const expect = require("chai").expect;
 describe("POST /Users", () => {
   const body = {
     email: "sushi2@example.com",
-    password: "123456",
-  }
+    password: "123456"
+  };
 
   afterEach("Delete all entries in database", () => {
-    return User.remove({})
-      .then(res => {
-        expect(res.ok).to.equal(1); // Empty Database
-      })
+    return User.remove({}).then(res => {
+      expect(res.ok).to.equal(1); // Empty Database
+    });
   });
 
   xit("should add an item to then assert with  a call to get items", () => {
@@ -32,20 +31,19 @@ describe("POST /Users", () => {
   });
 
   it("should add an item and assert directly in database", () => {
-
     return request(app)
       .post("/users")
       .send(body)
       .expect(200)
       .then(res => {
-         expect(res.body.user.email).to.equal(body.email);
-         return User.find({email: body.email});
+        expect(res.body.user.email).to.equal(body.email);
+        return User.find({ email: body.email });
       })
       .then(user => {
         // console.log('DB User', JSON.stringify(user, undefined, 2));
-         expect(user).to.have.lengthOf(1);
-         expect(user[0]).to.have.property("email", body.email);
-         expect(user[0].tokens[0]).to.have.property('token');
+        expect(user).to.have.lengthOf(1);
+        expect(user[0]).to.have.property("email", body.email);
+        expect(user[0].tokens[0]).to.have.property("token");
       });
   });
 

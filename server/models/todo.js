@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 // mongoose is an ORM so it helps
 // to interact with the database.
@@ -22,5 +22,5 @@ const Todo = mongoose.model("Todo", {
 });
 
 module.exports = {
-    Todo
-}
+  Todo
+};

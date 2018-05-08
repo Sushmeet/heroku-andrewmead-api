@@ -35,20 +35,19 @@ const userSchema = new Schema({
   ]
 });
 
-
-
-
 userSchema.methods.toJSON = function() {
   const user = this;
-  const userObject = user.toObject()
+  const userObject = user.toObject();
 
-  return _.pick(userObject, ['_id', 'email']);
-}
+  return _.pick(userObject, ["_id", "email"]);
+};
 
-userSchema.methods.generateAuthToken = function () {
+userSchema.methods.generateAuthToken = function() {
   const user = this;
   const access = "auth";
-  const token = jwt.sign({ _id: user._id.toHexString(), access }, "secretValue").toString();
+  const token = jwt
+    .sign({ _id: user._id.toHexString(), access }, "secretValue")
+    .toString();
   user.tokens.push({
     access,
     token
@@ -56,9 +55,8 @@ userSchema.methods.generateAuthToken = function () {
 
   return user.save().then(() => {
     return token;
-  })
+  });
 };
-
 
 // to use the schema definition
 // we convert our blogSchema into a Model we can work with.

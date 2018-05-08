@@ -19,7 +19,6 @@ const token = {
   hash: hashify(`${data} + somesecret`)
 };
 
-
 // Man in the middle attack
 // someone changes id and sends new hash
 

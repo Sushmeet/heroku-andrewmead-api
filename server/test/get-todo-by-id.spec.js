@@ -52,6 +52,6 @@ describe("GET /todos/id", () => {
       .get(`/todos/${hexId}`)
       .expect(404);
 
-      expect(res.body).to.be.empty;
+    expect(res.body).to.be.empty;
   });
 });

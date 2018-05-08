@@ -46,18 +46,18 @@ describe("PATCH /todos/id", () => {
 
   it("should clear completedAt when todo is not completed", async () => {
     const body = {
-        completed: false,
-        text: "juryyyyyy"
-      };
-  
-      const hexId = todoVals[1]._id.toHexString();
-      const res = await request(app)
-        .patch(`/todos/${hexId}`)
-        .send(body)
-        .expect(200);
-  
-      expect(res.body.todo.completed).to.be.false;
-      expect(res.body.todo.completedAt).to.be.a("null");
-      expect(res.body.todo.text).to.equal(body.text);
+      completed: false,
+      text: "juryyyyyy"
+    };
+
+    const hexId = todoVals[1]._id.toHexString();
+    const res = await request(app)
+      .patch(`/todos/${hexId}`)
+      .send(body)
+      .expect(200);
+
+    expect(res.body.todo.completed).to.be.false;
+    expect(res.body.todo.completedAt).to.be.a("null");
+    expect(res.body.todo.text).to.equal(body.text);
   });
 });
