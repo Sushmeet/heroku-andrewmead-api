@@ -38,12 +38,12 @@ const userSchema = new Schema({
 
 
 
-// userSchema.methods.toJson = function() {
-//   const user = this;
-//   const userObject = user.toObject()
+userSchema.methods.toJSON = function() {
+  const user = this;
+  const userObject = user.toObject()
 
-//   return _.pick(userObject, ['_id', 'email']);
-// }
+  return _.pick(userObject, ['_id', 'email']);
+}
 
 userSchema.methods.generateAuthToken = function () {
   const user = this;
