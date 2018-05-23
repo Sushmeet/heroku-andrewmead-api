@@ -125,6 +125,40 @@ app.post("/users", (req, res) => {
     });
 });
 
+// declare a middle ware function
+
+const authenticate = (req, res, next) => {
+  const token = req.header('x-auth');
+
+  User.findByToken(token).then((user) => {
+    if (!user) {
+      return Promise.reject();
+    }
+    req.user = user;
+    req.token = token;
+    next();
+  }).catch((e) => {
+    res.status(401).send('No user');
+  })
+
+}
+
+
+// try out private route 
+app.get('/users/me', authenticate, (req, res) => {
+  res.send(req.user);
+  // const token = req.header('x-auth');
+
+  // User.findByToken(token).then((user) => {
+  //   if (!user) {
+  //     return Promise.reject();
+  //   }
+  //   res.send(user);
+  // }).catch((e) => {
+  //   res.status(401).send('No user');
+  // })
+})
+
 app.listen(port, () => {
   console.log(`Started Port at ${port}`);
 });

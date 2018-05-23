@@ -35,6 +35,7 @@ const userSchema = new Schema({
   ]
 });
 
+// instance method
 userSchema.methods.toJSON = function() {
   const user = this;
   const userObject = user.toObject();
@@ -57,6 +58,25 @@ userSchema.methods.generateAuthToken = function() {
     return token;
   });
 };
+
+// model method (NOT instance methods)
+userSchema.statics.findByToken = function (token) {
+  const user = this;
+  let decoded;
+
+  try {
+    decoded = jwt.verify(token, 'secretValue');
+
+  } catch (e) {
+    return Promise.reject();
+  }
+
+  return user.findOne({
+    _id: decoded._id,
+    'tokens.token': token,
+    'tokens.access': 'auth' 
+  })
+}
 
 // to use the schema definition
 // we convert our blogSchema into a Model we can work with.
