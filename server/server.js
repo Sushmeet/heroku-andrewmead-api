@@ -5,7 +5,8 @@ const bodyParser = require("body-parser");
 const { mongoose } = require("./db/mongoose");
 const { Todo } = require("./models/todo");
 const { User } = require("./models/user");
-const { ObjectId } = require("mongodb");
+const { authenticate } = require("./middleware/authenticate");
+const { ObjectId } = require("mongodb");  
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -124,24 +125,6 @@ app.post("/users", (req, res) => {
       res.status(400).send(e);
     });
 });
-
-// declare a middle ware function
-
-const authenticate = (req, res, next) => {
-  const token = req.header('x-auth');
-
-  User.findByToken(token).then((user) => {
-    if (!user) {
-      return Promise.reject();
-    }
-    req.user = user;
-    req.token = token;
-    next();
-  }).catch((e) => {
-    res.status(401).send('No user');
-  })
-
-}
 
 
 // try out private route 
