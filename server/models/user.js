@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
 const _ = require("lodash");
+const bcrypt = require("bcryptjs");
 
 const userSchema = new Schema({
   email: {
@@ -60,23 +61,35 @@ userSchema.methods.generateAuthToken = function() {
 };
 
 // model method (NOT instance methods)
-userSchema.statics.findByToken = function (token) {
+userSchema.statics.findByToken = function(token) {
   const user = this;
   let decoded;
 
   try {
-    decoded = jwt.verify(token, 'secretValue');
-
+    decoded = jwt.verify(token, "secretValue");
   } catch (e) {
     return Promise.reject();
   }
 
   return user.findOne({
     _id: decoded._id,
-    'tokens.token': token,
-    'tokens.access': 'auth' 
-  })
-}
+    "tokens.token": token,
+    "tokens.access": "auth"
+  });
+};
+
+userSchema.pre("save", async function(next) {
+  let user = this;
+  if (user.isModified("password")) {
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(user.password, salt);
+
+    user.password = hash;
+    next();
+  } else {
+    next();
+  }
+});
 
 // to use the schema definition
 // we convert our blogSchema into a Model we can work with.
