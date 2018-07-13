@@ -2,8 +2,8 @@ const request = require("supertest");
 const expect = require("chai").expect;
 
 const { ObjectId } = require("mongodb");
-const { Todo } = require("../models/todo");
-const { app } = require("../server");
+const { Todo } = require("../../models/todo");
+const { app } = require("../../server");
 
 describe("DELETE /todo", () => {
   const todoVals = [

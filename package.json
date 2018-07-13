@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server/server.js",
     "start:watch": "nodemon --exec npm start",
-    "test": "mocha server/**/*.spec.js",
+    "test": "mocha --recursive server/test",
     "test:watch": "nodemon --exec 'npm test'"
   },
   "engines": {

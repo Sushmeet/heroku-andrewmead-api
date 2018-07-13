@@ -1,7 +1,8 @@
 const request = require("supertest");
-const { app } = require("../server");
-const { Todo } = require("../models/todo");
 const expect = require("chai").expect;
+
+const { Todo } = require("../../models/todo");
+const { app } = require("../../server");
 
 describe("POST /Todos", () => {
   const text = "Choclates3";

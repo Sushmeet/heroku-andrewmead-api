@@ -1,8 +1,8 @@
 const request = require("supertest");
 const expect = require("chai").expect;
 
-const { Todo } = require("../models/todo");
-const { app } = require("../server");
+const { Todo } = require("../../models/todo");
+const { app } = require("../../server");
 
 describe("GET /todo", () => {
   const todoVals = [

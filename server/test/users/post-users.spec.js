@@ -1,6 +1,6 @@
 const request = require("supertest");
-const { app } = require("../server");
-const { User } = require("../models/user");
+const { app } = require("../../server");
+const { User } = require("../../models/user");
 const expect = require("chai").expect;
 
 describe("POST /Users", () => {
