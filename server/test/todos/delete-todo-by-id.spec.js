@@ -6,7 +6,7 @@ const { Todo } = require('../../models/todo');
 const { app } = require('../../server');
 const { todoVals, insertTodos, deleteTodos } = require('../seed-data/seed.js');
 
-describe.only('DELETE /todo', () => {
+describe('DELETE /todo', () => {
   beforeEach('Seed two items in the database', async () => {
     const res = await insertTodos();
     // const res = await Todo.insertMany(todoVals); //when i did this with a  then statement and empty inside done was needed.
