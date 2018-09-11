@@ -1,7 +1,7 @@
-const { User } = require("../models/user");
+const { User } = require('../models/user');
 
 const authenticate = (req, res, next) => {
-  const token = req.header("x-auth");
+  const token = req.header('x-auth');
 
   User.findByToken(token)
     .then(user => {
@@ -13,7 +13,7 @@ const authenticate = (req, res, next) => {
       next();
     })
     .catch(e => {
-      res.status(401).send("No user");
+      res.status(401).send(`No user${e}`);
     });
 };
 
