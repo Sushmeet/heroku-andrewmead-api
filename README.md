@@ -1,6 +1,9 @@
 # mongo db start
 ``` mongod --dbpath mongo-data ```
 
+# mocha tests
+``` "test": "mocha server/**/*.spec.js", ```
+
 #heroku
 > heroku create
 > heroku addons:create mongolab:sandbox

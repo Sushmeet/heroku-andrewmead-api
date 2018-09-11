@@ -29,15 +29,15 @@ app.get('/todos/:id', (req, res) => {
   if (!ObjectId.isValid(id)) {
     return res.status(404).send();
   }
-  Todo.findById(id)
+  return Todo.findById(id)
     .then(todo => {
       if (!todo) {
         return res.status(404).send({});
       }
-      res.send({ todo });
+      return res.send({ todo });
     })
     .catch(e => {
-      res.status(400).send();
+      res.status(400).send(e);
     });
 });
 
@@ -69,12 +69,12 @@ app.patch('/todos/:id', (req, res) => {
     body.completedAt = null;
   }
 
-  Todo.findByIdAndUpdate(id, { $set: body }, { new: true })
+  return Todo.findByIdAndUpdate(id, { $set: body }, { new: true })
     .then(todo => {
       if (!todo) {
         return res.status(404).send();
       }
-      res.send({ todo });
+      return res.send({ todo });
     })
     .catch(e => {
       res.status(400).send(e);
@@ -94,19 +94,18 @@ app.delete('/todos/:id', (req, res) => {
     return res.status(404).send('Not a valid ID');
   }
 
-  Todo.findByIdAndRemove(id)
+  return Todo.findByIdAndRemove(id)
     .then(todo => {
       if (!todo) {
         return res.status(404).send({});
       }
 
-      res.send({ todo });
+      return res.send({ todo });
     })
     .catch(e => {
       return res.status(400).send(e);
     });
 });
-// "test": "mocha server/**/*.spec.js",
 
 // POST username
 app.post('/users', (req, res) => {
@@ -115,7 +114,7 @@ app.post('/users', (req, res) => {
 
   user
     .save()
-    .then(user => {
+    .then(() => {
       return user.generateAuthToken();
     })
     .then(token => {
