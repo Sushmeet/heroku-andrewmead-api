@@ -1,48 +1,47 @@
-const express = require("express");
-const _ = require("lodash");
-const bodyParser = require("body-parser");
+const express = require('express');
+const _ = require('lodash');
+const bodyParser = require('body-parser');
 
-const { mongoose } = require("./db/mongoose");
-const { Todo } = require("./models/todo");
-const { User } = require("./models/user");
-const { authenticate } = require("./middleware/authenticate");
-const { ObjectId } = require("mongodb");
+const { mongoose } = require('./db/mongoose');
+const { Todo } = require('./models/todo');
+const { User } = require('./models/user');
+const { authenticate } = require('./middleware/authenticate');
+const { ObjectId } = require('mongodb');
 
 const app = express();
 const port = process.env.PORT || 4000;
 
 app.use(bodyParser.json());
 
-app.get("/", (req, res) => {
-  res.send("Welcome to the TODO API");
+app.get('/', (req, res) => {
+  res.send('Welcome to the TODO API');
 });
 
-app.get("/todos", (req, res) => {
+app.get('/todos', (req, res) => {
   Todo.find().then(todos => {
     res.status(200).send({ todos });
   });
 });
 
-app.get("/todos/:id", (req, res) => {
+app.get('/todos/:id', (req, res) => {
   const id = req.params.id;
 
   if (!ObjectId.isValid(id)) {
     return res.status(404).send();
-  } else {
-    Todo.findById(id)
-      .then(todo => {
-        if (!todo) {
-          return res.status(404).send({});
-        }
-        res.send({ todo });
-      })
-      .catch(e => {
-        res.status(400).send();
-      });
   }
+  Todo.findById(id)
+    .then(todo => {
+      if (!todo) {
+        return res.status(404).send({});
+      }
+      res.send({ todo });
+    })
+    .catch(e => {
+      res.status(400).send();
+    });
 });
 
-app.post("/todos", (req, res) => {
+app.post('/todos', (req, res) => {
   const todo = new Todo({ text: req.body.text });
 
   todo.save().then(
@@ -55,12 +54,12 @@ app.post("/todos", (req, res) => {
   );
 });
 
-app.patch("/todos/:id", (req, res) => {
+app.patch('/todos/:id', (req, res) => {
   const id = req.params.id;
-  const body = _.pick(req.body, ["text", "completed"]);
+  const body = _.pick(req.body, ['text', 'completed']);
 
   if (!ObjectId.isValid(id)) {
-    return res.status(404).send("Not a valid ID");
+    return res.status(404).send('Not a valid ID');
   }
 
   if (_.isBoolean(body.completed) && body.completed) {
@@ -82,17 +81,17 @@ app.patch("/todos/:id", (req, res) => {
     });
 });
 
-app.delete("/todos", (req, res) => {
+app.delete('/todos', (req, res) => {
   Todo.remove({}).then(todos => {
     res.send({ todos });
   });
 });
 
-app.delete("/todos/:id", (req, res) => {
+app.delete('/todos/:id', (req, res) => {
   const id = req.params.id;
 
   if (!ObjectId.isValid(id)) {
-    return res.status(404).send("Not a valid ID");
+    return res.status(404).send('Not a valid ID');
   }
 
   Todo.findByIdAndRemove(id)
@@ -107,11 +106,11 @@ app.delete("/todos/:id", (req, res) => {
       return res.status(400).send(e);
     });
 });
-    //"test": "mocha server/**/*.spec.js",
+// "test": "mocha server/**/*.spec.js",
 
 // POST username
-app.post("/users", (req, res) => {
-  const body = _.pick(req.body, ["email", "password"]);
+app.post('/users', (req, res) => {
+  const body = _.pick(req.body, ['email', 'password']);
   const user = new User(body);
 
   user
@@ -120,7 +119,7 @@ app.post("/users", (req, res) => {
       return user.generateAuthToken();
     })
     .then(token => {
-      res.header("x-auth", token).send({ user });
+      res.header('x-auth', token).send({ user });
     })
     .catch(e => {
       res.status(400).send(e);
@@ -128,21 +127,21 @@ app.post("/users", (req, res) => {
 });
 
 // GET users
-app.get("/users", (req, res) => {
+app.get('/users', (req, res) => {
   User.find().then(users => {
     res.send({ users });
   });
 });
 
 // Delete users
-app.delete("/users", (req, res) => {
+app.delete('/users', (req, res) => {
   User.remove({}).then(users => {
     res.send({ users });
   });
 });
 
 // try out private route
-app.get("/users/me", authenticate, (req, res) => {
+app.get('/users/me', authenticate, (req, res) => {
   res.send(req.user);
   // const token = req.header('x-auth');
 
