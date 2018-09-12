@@ -2,7 +2,7 @@ const express = require('express');
 const _ = require('lodash');
 const bodyParser = require('body-parser');
 
-const { mongoose } = require('./db/mongoose');
+const { mongoose } = require('./db/mongoose'); // needed to load the mongo db
 const { Todo } = require('./models/todo');
 const { User } = require('./models/user');
 const { authenticate } = require('./middleware/authenticate');
@@ -122,6 +122,26 @@ app.post('/users', (req, res) => {
     })
     .catch(e => {
       res.status(400).send(e);
+    });
+});
+
+// POST /users/login {email, password}
+
+app.post('/users/login', (req, res) => {
+  const body = _.pick(req.body, ['email', 'password']);
+  let userres;
+
+  // check if user exists.
+  return User.findByCredentials(body.email, body.password)
+    .then((userres2) => {
+      userres = userres2;
+      return userres.generateAuthToken();
+    })
+    .then((token) => {
+      res.header('x-auth', token).send({ userres });
+    })
+    .catch((e) => {
+      res.status(404).send(e);
     });
 });
 
